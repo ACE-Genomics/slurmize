@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use SLURMACE qw(send2slurm);
-use Basename qw(basename);
+use File::Basename qw(basename);
 ############################################
 ###### Variables de ejecucion ##############
 ############################################
