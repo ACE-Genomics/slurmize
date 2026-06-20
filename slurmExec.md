@@ -59,7 +59,7 @@ to finish its execution
             ...
             $task{'dependency'} = 'afterok:'.join(',afterok:',@jobids);
             ...
-            lurmexec(\%task);
+            slurmexec(\%task);
 
     Of course, if dependencies are not going to be used, the 
     **dependency** option could be safely ignored. But notice that, if you are 
@@ -71,4 +71,4 @@ to finish its execution
     jobs that function should wait for. Once all the jobs have finished, the control is returned to main 
     program
 
-    usage: wait4jobs(@jobs\_list) 
+            usage: wait4jobs(@jobs_list) 

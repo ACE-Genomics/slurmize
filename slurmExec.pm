@@ -160,7 +160,7 @@ This function uses slurm to ask if given jobs are running. User should supply an
 jobs that function should wait for. Once all the jobs have finished, the control is returned to main 
 program
 
-usage: wait4jobs(@jobs_list) 
+	usage: wait4jobs(@jobs_list) 
 
 =cut
 
