@@ -3,8 +3,8 @@
 This is a very simple perl script that try to expose a very simple way to launch jobs into a SLURM cluster. It uses an external perl module (SLURMACE.pm) so we also provide a shell script to download and install it into your system. 
 
 ## Install
-- Download and run the *install\_slurmace.sh* script
-- put the slurmize.pl script wherever you need it an run it
+- Download and run the *install\_slurmExec.sh* script and put the slurmize.pl script wherever you need it an run it
+- Or, download the full repository and add to your bin path
 - enjoy
 
 ## Usage
@@ -28,23 +28,23 @@ and the script automagicallly make a directory named _slurm_, creates a separate
 
 The script should run in any SLURM cluster but maybe you want to adjust some behaviour like the partition, the execution time or something similar. Notice that you can edit some default variables at the beginning of the script that can change the parallelization queue. 
 
-However this cover only a few posibilities. For a depper customization you should see the [SLURMACE documentation](https://github.com/asqwerty666/acenip/blob/main/doc/SLURMACE.md) and edit the definition of the *%ptask* hash inside the script. It should be easy if the already shown syntax is followed. By example, if you want to add an email address different from the local user email you can add something like,
+However this cover only a few posibilities. For a depper customization you should see the [slurmExec documentation](https://github.com/ACE-Genomics/tool-slurmize/blob/main/slurmExec.md) and edit the definition of the *%ptask* hash inside the script. Notice that you can add any option valid for your sbatch script and it will be simply written to the running script. It should be easy if the documented syntax is followed. By example, if you want to add an email address different from the local user email you can add something like,
 
 ```
-	'mail_user' => 'another_email@myserver.com',
+	'mail-user' => 'another_email@myserver.com',
 ```
 
 at the end of the definition of the parallelization hash as,
 
 ```
-my %ptask = ( 'job_name' => basename($ifile), 
-	'cpus' => $cpus_per_proc, 
-	'mem_per_cpu' => $mem_per_cpu, 
+my %ptask = ( 'job-name' => basename($ifile), 
+	'cpus-per-tasks' => $cpus_per_proc, 
+	'mem-per-cpu' => $mem_per_cpu, 
 	'time' => $time,  
-	'mail_type' => 'FAIL,TIME_LIMIT,STAGE_OUT', 
+	'mail-type' => 'FAIL,TIME_LIMIT,STAGE_OUT', 
 	'partition' => $partition, 
 	'debug' => $debug,
-	'mail_user' => 'another_email@myserver.com', 
+	'mail-user' => 'another_email@myserver.com', 
 );
 
 ``` 
