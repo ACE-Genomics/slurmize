@@ -1,8 +1,11 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use SLURMACE qw(send2slurm);
+#use SLURMACE qw(send2slurm);
 use File::Basename qw(basename);
+use FindBin;
+use lib "$FindBin::Bin";
+use slurmExec;
 ############################################
 ###### Variables de ejecucion ##############
 ############################################
@@ -14,8 +17,7 @@ my $cpus_per_proc = 4;
 # Si no estas seguro de lo que haces no lo toques
 my $mem_per_cpu = '4G';
 # Particion del cluster a usar
-# Si no estas seguro, dejarlo en blanco
-my $partition = '';
+my $partition = 'fast';
 # Directorio para almacenar los scripts y logs
 my $wdir = 'slurm';
 ############################################
@@ -35,12 +37,11 @@ mkdir $wdir;
 my $count = 0;
 open IPDF, "<$ifile" or die "Could not open input file\n$!\n";
 
-my %ptask = ( 'job_name' => basename($ifile),
-	'cpus' => $cpus_per_proc,
-	'mem_per_cpu' => $mem_per_cpu,
+my %ptask = ( 'job-name' => basename($ifile),
+	'-c' => $cpus_per_proc,
+	'mem-per-cpu' => $mem_per_cpu,
 	'time' => $time, 
-	'mail_type' => 'FAIL,TIME_LIMIT,STAGE_OUT',
-	'partition' => $partition,
+	'mail-type' => 'FAIL,TIME_LIMIT,STAGE_OUT',
 	'debug' => $debug,	
 );
 
@@ -51,16 +52,16 @@ while (<IPDF>) {
 		$ptask{'filename'} = $wdir.'/'.$ofile.'.sh';
 		$ptask{'output'} = $wdir.'/'.basename($ifile).'.out'; 
 		$ptask{'command'} = $_;
-		send2slurm(\%ptask);
+		slurmexec(\%ptask);
 	}
 }
 close IPDF;
 unless ($debug) {
-	my %warn = ('job_name' => basename($ifile),         
+	my %warn = ('job-name' => basename($ifile),         
 		'filename' => $wdir.'/tasks_end.sh',         
-		'mailtype' => 'END',         
+		'mail-type' => 'END',         
 		'output' => $wdir.'/tasks_end',
 		'dependency' => 'singleton', 
 	); 
-	send2slurm(\%warn);
+	slurmexec(\%warn);
 }
