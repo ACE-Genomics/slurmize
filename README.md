@@ -1,6 +1,6 @@
 # slurmize.pl
 
-This is a very simple perl script that try to expose a very simple way to launch jobs into a SLURM cluster. It uses an external perl module (SLURMACE.pm) so we also provide a shell script to download and install it into your system. 
+This is a very simple perl script that try to expose a very simple way to launch jobs into a SLURM cluster. It uses a perl module (slurmExec.pm) so we also provide a shell script to download and install it into your system. However if you can download and put all togheter, the script should just works.
 
 ## Install
 - Download and run the *install\_slurmExec.sh* script and put the slurmize.pl script wherever you need it an run it
