@@ -33,7 +33,7 @@ sub default_task{
 	$task{'filename'} = 'slurm_'.$label.'.sh';
 	$task{'output'} = 'slurm_'.$label.'.out';
 	$task{'job-name'} = 'myjob';
-	$task{'mailtype'} = 'FAIL,TIME_LIMIT,STAGE_OUT';
+	$task{'mail-type'} = 'FAIL,TIME_LIMIT,STAGE_OUT';
 	return %task;
 }
 
@@ -111,8 +111,10 @@ reusing a HASH then this key should be deleted from it.
 sub slurmexec{
 	my %task = %{$_[0]};
 	my %dtask = default_task;
-	foreach my $p (keys %task){
-		$task{$p} = $dtask{$p} unless $task{$p};
+	foreach my $p (keys %dtask){
+		unless (exists($task{$p}) and $task{$p}){
+			$task{$p} = $dtask{$p};
+		}
 	}
 	my $scriptfile = $task{filename};
 	delete $task{filename};
@@ -120,7 +122,14 @@ sub slurmexec{
 	if (exists($task{command}) and $task{command}){
 		$command = $task{command};
 		delete $task{command};
+	}else{
+	# Here I'm going to do a thing: If there is no commmand, the script 
+	# warns when it ends, unless another shit is specified in the hash
+		unless (exists($task{'mail-type'}) and $task{'mail-type'}){
+			$task{'mail-type'} = 'END';
+		}
 	}
+
 	my $debug = $task{debug};
 	delete $task{debug};
 	my $order;
@@ -165,10 +174,11 @@ program
 =cut
 
 sub wait4jobs{
+	my $time = 60;
 	my $jlist = join ',',@_;
 	my $status;
 	do {
-		sleep 60;
+		sleep $time;
 		$status = qx/squeue -j $jlist | grep -v JOBID/;
 		print "." if $status;
 	} while($status);

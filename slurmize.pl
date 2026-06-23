@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-#use SLURMACE qw(send2slurm);
 use File::Basename qw(basename);
 use FindBin;
 use lib "$FindBin::Bin";
@@ -16,12 +15,13 @@ my $cpus_per_proc = 4;
 # Memoria a usar por cada CPU 
 # Si no estas seguro de lo que haces no lo toques
 my $mem_per_cpu = '4G';
-# Particion del cluster a usar
+# Particion del cluster a usar. No usado. Editar el hash si se necesita.
 my $partition = 'fast';
 # Directorio para almacenar los scripts y logs
 my $wdir = 'slurm';
 ############################################
 ##### No editar a partir de aqui ###########
+### A no ser que sepas lo que haces ########
 ############################################
 my $debug = 0;
 @ARGV = ("-h") unless @ARGV;
@@ -37,6 +37,12 @@ mkdir $wdir;
 my $count = 0;
 open IPDF, "<$ifile" or die "Could not open input file\n$!\n";
 
+###########################################
+# Aqui van las propiedades de los jobs ####
+# Edita en caso que sea necesario añadir o
+# cambiar algo ############################
+###########################################
+
 my %ptask = ( 'job-name' => basename($ifile),
 	'-c' => $cpus_per_proc,
 	'mem-per-cpu' => $mem_per_cpu,
@@ -44,6 +50,10 @@ my %ptask = ( 'job-name' => basename($ifile),
 	'mail-type' => 'FAIL,TIME_LIMIT,STAGE_OUT',
 	'debug' => $debug,	
 );
+
+############################################
+############################################
+############################################
 
 while (<IPDF>) {
 	unless (/^#.*/ or /^\s*$/){
